@@ -13,9 +13,11 @@ error NFTmarket_PriceCannotBeZero();
 error NFTmarket_NotApproved();
 error NFTmarket_AlreadyListed(address nft,uint256 tokenId);
 error NFTmarket_NotListed(address nft,uint256 tokenId);
-error  NFTmarket_NotOwner(address nft,uint256 token,address owner);
+
+error NFTmarket_NotOwner(address nft,uint256 token,address owner);
 error NFTmarket_NotEnoughPrice(address nftAddress,uint256 tokenId,uint256 value,address sender);
 error NFTmarket_transferFailed(address sender,uint256 proceeds);
+error NFTmarket_NoProceeds();
 contract NFTmarket{
     //contract  variables
     struct Listing{
@@ -59,7 +61,7 @@ contract NFTmarket{
         _;
             
         }
-
+    
     //main functions
     function listItem(address nftAddress,uint256 tokenId,uint256 price) isOwner(nftAddress,tokenId,msg.sender) alreadyListed(nftAddress,tokenId) external {
         if(price<=0){
@@ -73,7 +75,7 @@ contract NFTmarket{
         emit ItemListed(nftAddress,tokenId,price,msg.sender);
     }
 
-    function buyItem(address nftAddress,uint256 tokenId) isListed(nftAddress,tokenId) external payable {
+    function buyItem(address nftAddress,uint256 tokenId)   isListed(nftAddress,tokenId) public payable{
         Listing memory listing = s_listings[nftAddress][tokenId];
         if(msg.value<listing.price){
             revert NFTmarket_NotEnoughPrice(nftAddress,tokenId,msg.value,msg.sender);
@@ -102,6 +104,9 @@ contract NFTmarket{
 
     function withdraw() external payable{
         uint256 proceeds = s_proceeds[msg.sender];
+        if(proceeds==0){
+            revert NFTmarket_NoProceeds();
+        }
         delete (s_proceeds[msg.sender]);
         (bool send,) = payable(msg.sender).call{value:proceeds}("");
         if(!send){

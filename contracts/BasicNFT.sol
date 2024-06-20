@@ -7,7 +7,7 @@ contract BasicNFT is ERC721{
     constructor() ERC721("katze","CAR"){
         s_counter=0;
     }
-    function mintNFT() public returns(uint256){
+    function mintNft() public returns(uint256){
         _safeMint(msg.sender,s_counter);
         s_counter = s_counter +1;
         return s_counter;
