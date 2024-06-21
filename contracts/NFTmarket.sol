@@ -15,7 +15,7 @@ error NFTmarket_AlreadyListed(address nft,uint256 tokenId);
 error NFTmarket_NotListed(address nft,uint256 tokenId);
 
 error NFTmarket_NotOwner(address nft,uint256 token,address owner);
-error NFTmarket_NotEnoughPrice(address nftAddress,uint256 tokenId,uint256 value,address sender);
+error NFTmarket_NotEnoughPrice(uint256 value,address sender);
 error NFTmarket_transferFailed(address sender,uint256 proceeds);
 error NFTmarket_NoProceeds();
 contract NFTmarket{
@@ -78,7 +78,7 @@ contract NFTmarket{
     function buyItem(address nftAddress,uint256 tokenId)   isListed(nftAddress,tokenId) public payable{
         Listing memory listing = s_listings[nftAddress][tokenId];
         if(msg.value<listing.price){
-            revert NFTmarket_NotEnoughPrice(nftAddress,tokenId,msg.value,msg.sender);
+            revert NFTmarket_NotEnoughPrice(msg.value,msg.sender);
         }
         s_proceeds[listing.seller] = s_proceeds[listing.seller] + msg.value;
         delete s_listings[nftAddress][tokenId];

@@ -20,6 +20,6 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     waitConfirmations: waitConfirmations,
   });
 
-  log("deployed");
+  log(`deployed on ${BasicNFT.address}`);
 };
 module.exports.tags = ["all", "basicNft"];

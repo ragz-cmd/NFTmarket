@@ -23,6 +23,6 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     log("verifying...");
     await verify(deploy.address, args);
   }
-  log("deployed market");
+  log(`deployed on ${nftMarket.address}`);
 };
 module.exports.tags = ["all", "nftMarket"];

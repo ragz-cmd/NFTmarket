@@ -120,8 +120,8 @@ async function getContract(contract) {
 
                   const newOwner = await basicNft.ownerOf(TOKEN_ID)
                   assert(newOwner === user.address, "Ownership not transferred correctly")
-
-                  const deployerProceeds = await nftMarketplace.getProceeds(deployer.address)
+                  nftMarketplace = nftMarketplace.connect(deployer)
+                  const deployerProceeds = await nftMarketplace.getProceeds()
                   assert(
                       deployerProceeds.toString() === PRICE.toString(),
                       "Proceeds not updated correctly"
